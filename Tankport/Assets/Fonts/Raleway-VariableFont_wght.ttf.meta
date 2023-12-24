@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: eccad28783b1f6c448474bb186d60a0a
+guid: 24aa8b2bd24ca43459d1d8351931aa15
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,8 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Bebas Neue
   fontNames:
-  - Bebas Neue
+  - Raleway
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
