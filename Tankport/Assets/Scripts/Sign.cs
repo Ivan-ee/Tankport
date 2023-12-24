@@ -10,8 +10,7 @@ public class Sign : MonoBehaviour
     {
         offset = transform.position;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         Vector3 newPos = new Vector3(tank.transform.position.x, offset.y, tank.transform.position.z);

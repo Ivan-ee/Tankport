@@ -7,17 +7,21 @@ public class Credits : MonoBehaviour
 {
     private bool fadeout = false;
 
-    void Update() { 
+    void Update()
+    {
         if (fadeout)
-            Camera.main.GetComponent<AudioSource>().volume = Mathf.Lerp(Camera.main.GetComponent<AudioSource>().volume, 0, 0.005f);
+            Camera.main.GetComponent<AudioSource>().volume =
+                Mathf.Lerp(Camera.main.GetComponent<AudioSource>().volume, 0, 0.005f);
     }
 
-    public void LoadMenu() {
+    public void LoadMenu()
+    {
         fadeout = true;
         StartCoroutine(Menu());
     }
 
-    IEnumerator Menu() {
+    IEnumerator Menu()
+    {
         yield return new WaitForSeconds(10);
         SceneManager.LoadScene("Menu");
     }
