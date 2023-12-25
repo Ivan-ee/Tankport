@@ -110,19 +110,6 @@ public class Tank : MonoBehaviour
 
                     teleportable = false;
                 }
-            } else {
-                // teleport to left portal
-                if (leftPortal.activeSelf) {
-                    // disable trail
-                    leftTrail.GetComponent<TrailRenderer>().emitting = false;
-                    rightTrail.GetComponent<TrailRenderer>().emitting = false;
-
-                    lastPortal = rightPortal;
-                    allowedToDrive = false;
-                    StartCoroutine(Teleport(leftPortal.transform.position));
-
-                    teleportable = false;
-                }
             }
         }
     }
