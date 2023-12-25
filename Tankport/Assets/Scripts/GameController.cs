@@ -129,8 +129,9 @@ public class GameController : MonoBehaviour
         pausable = false;
         portalPlacer.GetComponent<PortalPlacement>().allowedToPlace = false;
         time = timer.GetComponent<Timer>().time;
+        SaveRecord(time);
         Destroy(timer);
-        timeShown.GetComponent<TextMeshProUGUI>().text = time.ToString() + "с";
+        timeShown.GetComponent<TextMeshProUGUI>().text = time.ToString() + "с"; 
         StartCoroutine(SwitchCameraWin());
 
         if (multipleTanks)
@@ -146,6 +147,7 @@ public class GameController : MonoBehaviour
         {
             LevelManager.countUnlockedLevel++;
         }
+        
     }
 
     public void Lose()
@@ -180,5 +182,13 @@ public class GameController : MonoBehaviour
         secondCamera.gameObject.SetActive(true);
         secondCamera.enabled = true;
         lostPanel.SetActive(true);
+    }
+
+    void SaveRecord(float timeScore)
+    {
+        if (PlayerPrefs.GetFloat("Level_"+ SceneManager.GetActiveScene().buildIndex.ToString()) >= timeScore)
+        {
+            PlayerPrefs.SetFloat("Level_"+ SceneManager.GetActiveScene().buildIndex.ToString(), timeScore);
+        }
     }
 }

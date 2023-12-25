@@ -17,6 +17,11 @@ public class ButtonManager : MonoBehaviour
     {
         SceneManager.LoadScene("Levels");
     }
+    
+    public void Main()
+    {
+        SceneManager.LoadScene("Menu");
+    }
 
     public void NextLevel()
     {

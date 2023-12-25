@@ -19,7 +19,7 @@ public class SoundManager : MonoBehaviour
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Menu" || SceneManager.GetActiveScene().name == "Credits")
+        if (SceneManager.GetActiveScene().name == "Menu" || SceneManager.GetActiveScene().name == "Credits" || SceneManager.GetActiveScene().name == "Levels")
         {
             Destroy(gameObject);
         }
