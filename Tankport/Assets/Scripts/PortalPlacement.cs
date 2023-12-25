@@ -11,47 +11,55 @@ public class PortalPlacement : MonoBehaviour
     private Vector3 clickPosition;
     private Vector3 portalCenter;
 
-    private void Start() {
+    private void Start()
+    {
         leftPortal.SetActive(false);
         rightPortal.SetActive(false);
         portalPreview.SetActive(false);
         portalCenter = new Vector3(0, 0, -5);
     }
 
-    private void Update() {
-        if (allowedToPlace) {
+    private void Update()
+    {
+        if (allowedToPlace)
+        {
             portalPreview.SetActive(true);
-            positionPortalPreview();
-            placePortal();
-        } else {
+            PositionPortalPreview();
+            PlacePortal();
+        }
+        else
+        {
             portalPreview.SetActive(false);
         }
     }
 
-    void positionPortalPreview() {
+    void PositionPortalPreview()
+    {
         clickPosition = -Vector3.one;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 300f, clickMask)) {
+        if (Physics.Raycast(ray, out hit, 300f, clickMask))
+        {
             clickPosition = hit.point;
         }
 
         portalPreview.transform.position = clickPosition + portalCenter;
     }
 
-    void placePortal() {
-        if (Input.GetMouseButtonDown(0)) {
-            // place left portal
+    void PlacePortal()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
             leftPortal.SetActive(true);
             leftPortal.GetComponent<AudioSource>().Play();
             leftPortal.GetComponent<Animator>().Play(0);
             leftPortal.transform.position = clickPosition + portalCenter;
         }
 
-        if (Input.GetMouseButtonDown(1)) {
-            // place right portal
+        if (Input.GetMouseButtonDown(1))
+        {
             rightPortal.SetActive(true);
             rightPortal.GetComponent<AudioSource>().Play();
             rightPortal.GetComponent<Animator>().Play(0);

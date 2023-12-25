@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -13,45 +14,58 @@ public class GameController : MonoBehaviour
     private float time;
     private bool pausable = true;
 
-    private void Start() {
+    private void Start()
+    {
         Pause();
     }
 
-    void Pause() {
+    void Pause()
+    {
         timer.GetComponent<Timer>().timing = !timer.GetComponent<Timer>().timing;
         pauseScreen.SetActive(true);
         portalPlacer.GetComponent<PortalPlacement>().allowedToPlace = false;
 
-        if (!multipleTanks) {
+        if (!multipleTanks)
+        {
             tank.GetComponent<Tank>().allowedToDrive = !tank.GetComponent<Tank>().allowedToDrive;
             tank.GetComponent<Tank>().rb.velocity = Vector3.zero;
-        } else {
-            foreach (GameObject mtank in tanks) {
+        }
+        else
+        {
+            foreach (GameObject mtank in tanks)
+            {
                 mtank.GetComponent<Tank>().allowedToDrive = !mtank.GetComponent<Tank>().allowedToDrive;
                 mtank.GetComponent<Tank>().rb.velocity = Vector3.zero;
             }
         }
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Space) && pausable) {
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && pausable)
+        {
             timer.GetComponent<Timer>().timing = !timer.GetComponent<Timer>().timing;
             StartCoroutine(SwitchTankSound());
             pauseScreen.SetActive(false);
             portalPlacer.GetComponent<PortalPlacement>().allowedToPlace = true;
             pausable = false;
 
-            if (!multipleTanks) {
+            if (!multipleTanks)
+            {
                 tank.GetComponent<AudioSource>().clip = tank.GetComponent<Tank>().start;
                 tank.GetComponent<AudioSource>().loop = false;
                 tank.GetComponent<AudioSource>().Play();
                 tank.GetComponent<Tank>().allowedToDrive = !tank.GetComponent<Tank>().allowedToDrive;
-                if (!tank.GetComponent<Tank>().allowedToDrive) {
+                if (!tank.GetComponent<Tank>().allowedToDrive)
+                {
                     tank.GetComponent<Tank>().rb.velocity = Vector3.zero;
                     pauseScreen.SetActive(true);
                 }
-            } else {
-                foreach (GameObject mtank in tanks) {
+            }
+            else
+            {
+                foreach (GameObject mtank in tanks)
+                {
                     mtank.GetComponent<AudioSource>().clip = mtank.GetComponent<Tank>().start;
                     mtank.GetComponent<AudioSource>().loop = false;
                     mtank.GetComponent<AudioSource>().Play();
@@ -60,35 +74,49 @@ public class GameController : MonoBehaviour
             }
         }
 
-        if (!multipleTanks) {
-            if (tank.GetComponent<Tank>().finished == true) {
+        if (!multipleTanks)
+        {
+            if (tank.GetComponent<Tank>().finished == true)
+            {
                 Win();
                 tank.GetComponent<Animator>().enabled = false;
             }
-        } else {
+        }
+        else
+        {
             int wincounter = 0;
-            foreach (GameObject mtank in tanks) {
-                if (mtank.GetComponent<Tank>().finished == true) {
+            foreach (GameObject mtank in tanks)
+            {
+                if (mtank.GetComponent<Tank>().finished == true)
+                {
                     wincounter++;
                 }
             }
-            if (wincounter == tanks.Count) {
+
+            if (wincounter == tanks.Count)
+            {
                 Win();
-                foreach (GameObject mtank in tanks) {
+                foreach (GameObject mtank in tanks)
+                {
                     mtank.GetComponent<Animator>().enabled = false;
                 }
             }
         }
     }
 
-    IEnumerator SwitchTankSound() {
+    IEnumerator SwitchTankSound()
+    {
         yield return new WaitForSeconds(0.9f);
-        if (!multipleTanks) {
+        if (!multipleTanks)
+        {
             tank.GetComponent<AudioSource>().clip = tank.GetComponent<Tank>().loop;
             tank.GetComponent<AudioSource>().loop = true;
             tank.GetComponent<AudioSource>().Play();
-        } else {
-            foreach (GameObject mtank in tanks) {
+        }
+        else
+        {
+            foreach (GameObject mtank in tanks)
+            {
                 mtank.GetComponent<AudioSource>().clip = mtank.GetComponent<Tank>().loop;
                 mtank.GetComponent<AudioSource>().loop = true;
                 mtank.GetComponent<AudioSource>().Play();
@@ -96,36 +124,48 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void Win() {
+    public void Win()
+    {
         pausable = false;
         portalPlacer.GetComponent<PortalPlacement>().allowedToPlace = false;
         time = timer.GetComponent<Timer>().time;
         Destroy(timer);
-        timeShown.GetComponent<TextMeshProUGUI>().text = time.ToString() + "s";
+        timeShown.GetComponent<TextMeshProUGUI>().text = time.ToString() + "с";
         StartCoroutine(SwitchCameraWin());
 
-        if (multipleTanks) {
-            foreach (GameObject mtank in tanks) {
+        if (multipleTanks)
+        {
+            foreach (GameObject mtank in tanks)
+            {
                 mtank.GetComponent<Animator>().enabled = false;
                 mtank.GetComponent<Tank>().allowedToDrive = false;
             }
         }
+
+        if (SceneManager.GetActiveScene().buildIndex == LevelManager.countUnlockedLevel)
+        {
+            LevelManager.countUnlockedLevel++;
+        }
     }
 
-    public void Lose() {
+    public void Lose()
+    {
         pausable = false;
         portalPlacer.GetComponent<PortalPlacement>().allowedToPlace = false;
         Destroy(timer);
         StartCoroutine(SwitchCameraLose());
-        if (multipleTanks) {
-            foreach (GameObject mtank in tanks) {
+        if (multipleTanks)
+        {
+            foreach (GameObject mtank in tanks)
+            {
                 mtank.GetComponent<Animator>().enabled = false;
                 mtank.GetComponent<Tank>().allowedToDrive = false;
             }
         }
     }
 
-    IEnumerator SwitchCameraWin() {
+    IEnumerator SwitchCameraWin()
+    {
         yield return new WaitForSeconds(1f);
         Camera.main.enabled = false;
         secondCamera.gameObject.SetActive(true);
@@ -133,7 +173,8 @@ public class GameController : MonoBehaviour
         wonPanel.SetActive(true);
     }
 
-    IEnumerator SwitchCameraLose() {
+    IEnumerator SwitchCameraLose()
+    {
         yield return new WaitForSeconds(1f);
         Camera.main.enabled = false;
         secondCamera.gameObject.SetActive(true);

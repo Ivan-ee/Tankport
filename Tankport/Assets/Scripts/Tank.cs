@@ -23,8 +23,8 @@ public class Tank : MonoBehaviour
     public bool allowedToDrive = true;
     public bool finished = false;
 
-    private void Awake() {
-        // get portals
+    private void Awake()
+    {
         leftPortal = GameObject.Find("LeftPortal");
         rightPortal = GameObject.Find("RightPortal");
         portalCenter = new Vector3(0, 0, 5);
@@ -32,31 +32,32 @@ public class Tank : MonoBehaviour
 
     void Start()
     {
-        // create list of waypoints the tank has to pass
         if (track == null)
             track = GameObject.Find("Track");
 
         waypoints = new List<Vector3>();
 
-        foreach (Transform child in track.transform) {
+        foreach (Transform child in track.transform)
+        {
             waypoints.Add(new Vector3(child.position.x, child.position.y, child.position.z));
         }
 
-        // get rigidbody
         rb = GetComponent<Rigidbody>();
         GetComponent<AudioSource>().enabled = true;
     }
 
     void FixedUpdate()
     {
-        if (allowedToDrive) {
+        if (allowedToDrive)
+        {
             LookAtWaypoint();
             MoveTowardsWaypoint();
             TurretLookAtWaypoint();
         }
     }
 
-    void LookAtWaypoint() {
+    void LookAtWaypoint()
+    {
         Vector3 targetDirection = waypoints[currentWaypoint] - transform.position;
         targetDirection = new Vector3(targetDirection.x, 0, targetDirection.z);
         float singleStep = speed * Time.deltaTime / 10;
@@ -64,43 +65,45 @@ public class Tank : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(newDirection);
     }
 
-    void TurretLookAtWaypoint() {
+    void TurretLookAtWaypoint()
+    {
         Vector3 targetDirection = waypoints[currentWaypoint] - transform.position;
         float singleStep = speed * Time.deltaTime;
         Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, singleStep);
         turret.transform.rotation = Quaternion.LookRotation(newDirection);
     }
 
-    void MoveTowardsWaypoint() {
+    void MoveTowardsWaypoint()
+    {
         rb.velocity = (transform.forward * speed);
     }
 
-    private void OnTriggerEnter(Collider other) {
-        // entering normal waypoint
-        if (other.gameObject.tag == "Waypoint") {
-            if (other.gameObject.name == "Waypoint (" + (currentWaypoint + 1).ToString() + ")" && other.gameObject.transform.parent == track.transform) {
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Waypoint")
+        {
+            if (other.gameObject.name == "Waypoint (" + (currentWaypoint + 1).ToString() + ")" &&
+                other.gameObject.transform.parent == track.transform)
+            {
                 currentWaypoint++;
                 if (currentWaypoint >= waypoints.Count)
                     currentWaypoint = 0;
             }
         }
 
-        // entering last waypoint
-        if (other.gameObject.tag == "FinalWaypoint" && currentWaypoint == waypoints.Count - 1) {
-            /*controller.GetComponent<GameController>().Win();
-            GetComponent<Animator>().enabled = false;
-            allowedToDrive = false;*/
+        if (other.gameObject.tag == "FinalWaypoint" && currentWaypoint == waypoints.Count - 1)
+        {
             finished = true;
             allowedToDrive = false;
         }
 
-        // entering portal
-        if (other.gameObject.tag == "Portal" && teleportable && !finished) {
+        if (other.gameObject.tag == "Portal" && teleportable && !finished)
+        {
             Camera.main.GetComponent<AudioSource>().Play();
-            if (other.gameObject.name == "LeftPortal") {
-                // teleport to right portal
-                if (rightPortal.activeSelf) {
-                    // disable trail
+            if (other.gameObject.name == "LeftPortal")
+            {
+                if (rightPortal.activeSelf)
+                {
                     leftTrail.GetComponent<TrailRenderer>().emitting = false;
                     rightTrail.GetComponent<TrailRenderer>().emitting = false;
 
@@ -114,16 +117,19 @@ public class Tank : MonoBehaviour
         }
     }
 
-    public void StartAnim() {
+    public void StartAnim()
+    {
         allowedToSwitchTeleportable = false;
     }
 
-    public void FinishedAnim() {
+    public void FinishedAnim()
+    {
         GetComponent<Animator>().SetBool("Teleporting", false);
         allowedToSwitchTeleportable = true;
     }
 
-    IEnumerator Teleport(Vector3 teleportPosition) {
+    IEnumerator Teleport(Vector3 teleportPosition)
+    {
         yield return new WaitForSeconds(0.2f);
         GetComponent<Animator>().SetBool("Teleporting", true);
         yield return new WaitForSeconds(0.2f);
@@ -134,8 +140,10 @@ public class Tank : MonoBehaviour
         allowedToSwitchTeleportable = true;
     }
 
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == "Lethal" || collision.gameObject.tag == "Tank") {
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Lethal" || collision.gameObject.tag == "Tank")
+        {
             GetComponent<AudioSource>().clip = explosionSound;
             GetComponent<AudioSource>().loop = false;
             GetComponent<AudioSource>().Play();
@@ -147,13 +155,17 @@ public class Tank : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other) {
-        if (other.gameObject.name == "LeftPortal" && lastPortal == rightPortal && allowedToSwitchTeleportable) {
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.name == "LeftPortal" && lastPortal == rightPortal && allowedToSwitchTeleportable)
+        {
             teleportable = true;
             leftTrail.GetComponent<TrailRenderer>().emitting = true;
             rightTrail.GetComponent<TrailRenderer>().emitting = true;
         }
-        if (other.gameObject.name == "RightPortal" && lastPortal == leftPortal && allowedToSwitchTeleportable) {
+
+        if (other.gameObject.name == "RightPortal" && lastPortal == leftPortal && allowedToSwitchTeleportable)
+        {
             teleportable = true;
             leftTrail.GetComponent<TrailRenderer>().emitting = true;
             rightTrail.GetComponent<TrailRenderer>().emitting = true;

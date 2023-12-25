@@ -6,11 +6,12 @@ public class Sign : MonoBehaviour
 {
     public GameObject tank;
     private Vector3 offset;
+
     void Start()
     {
         offset = transform.position;
     }
-    
+
     void Update()
     {
         Vector3 newPos = new Vector3(tank.transform.position.x, offset.y, tank.transform.position.z);
