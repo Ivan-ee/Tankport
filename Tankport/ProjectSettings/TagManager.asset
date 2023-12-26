@@ -10,6 +10,7 @@ TagManager:
   - Lethal
   - Sound
   - Tank
+  - Ground
   layers:
   - Default
   - TransparentFX

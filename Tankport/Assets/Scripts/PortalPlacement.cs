@@ -40,7 +40,7 @@ public class PortalPlacement : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 300f, clickMask))
+        if (Physics.Raycast(ray, out hit, 300f) && !clickMask.Equals(hit.collider.gameObject.layer))
         {
             clickPosition = hit.point;
         }
